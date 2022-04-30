@@ -1,0 +1,60 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/community
+    username: root
+    password: 12345678
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  thymeleaf:
+    cache: true
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: community-consumer-group
+      enable-auto-commit: true
+      auto-commit-interval: 3000
+  mail:
+    host: smtp.163.com
+    username: aufecomPan@163.com
+    password: JJTXHCBJRXJWWDNR
+    protocol: smtps
+    properties:
+      mail:
+        stmp:
+          ssl:
+            enable: true
+  task:
+    execution:
+      pool:
+        core-size: 5
+        max-size: 10
+        queue-capacity: 10
+    scheduling:
+      pool:
+        size: 5
+
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+
+community:
+  path:
+    domain: http://localhost:8080
+    upload: /Users/Pan/Desktop/upload
+
+server:
+  port: 8080
+  servlet:
+    context-path: /community
+
+elasticsearch:
+  host: localhost
+  port: 9200
+
+# 在elasticsearch.yml中配置，并重启
+# xpack.security.enabled: false
