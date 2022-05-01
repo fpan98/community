@@ -275,7 +275,7 @@ public class ElasticsearchTests {
       IndexRequest indexRequest = new IndexRequest("discusspost");
       int[] userId = new int[]{101, 102, 103, 111, 112, 131, 132, 133, 134};
       for (int id : userId) {
-         List<DiscussPost> discussPosts = discussPostMapper.selectDiscussPosts(id, 0, 100);
+         List<DiscussPost> discussPosts = discussPostMapper.selectDiscussPosts(id, 0, 100, 0);
          if(discussPosts!=null){
             for (DiscussPost post : discussPosts) {
                indexRequest.id(String.valueOf(post.getId()))

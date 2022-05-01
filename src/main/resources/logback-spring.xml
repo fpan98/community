@@ -82,6 +82,7 @@
     </appender>
 
     <logger name="com.mininowcoder.community" level="debug"/>
+    <logger name="org.springframework.kafka" level="error"/>
 
     <root level="info">
         <appender-ref ref="FILE_ERROR"/>

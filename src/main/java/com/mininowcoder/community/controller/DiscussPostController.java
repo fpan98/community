@@ -10,11 +10,9 @@ import com.mininowcoder.community.service.CommentService;
 import com.mininowcoder.community.service.DiscussPostService;
 import com.mininowcoder.community.service.LikeService;
 import com.mininowcoder.community.service.UserService;
-import com.mininowcoder.community.util.CommunityConstant;
-import com.mininowcoder.community.util.CommunityUtil;
-import com.mininowcoder.community.util.HostHolder;
-import com.mininowcoder.community.util.Page;
+import com.mininowcoder.community.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +45,10 @@ public class DiscussPostController implements CommunityConstant {
     @Autowired
     private EventProducer eventProducer;
 
-    @LoginRequired
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+//    @LoginRequired
     @PostMapping("/add")
     @ResponseBody
     public String addDiscussPost(String title, String content) {
@@ -69,6 +70,10 @@ public class DiscussPostController implements CommunityConstant {
         event.setEntityType(ENTITY_TYPE_POST);
         event.setEntityId(post.getId());
         eventProducer.fireEvent(event);
+
+        // 将帖子放入redis的set集合中，然后定期计算分数
+        String redisKey = RedisKeyUtil.getPostScoreKey();
+        redisTemplate.opsForSet().add(redisKey, post.getId());
 
         // 报错的程序，系统将统一处理
         return CommunityUtil.getJSONString(0, "发布成功！");
@@ -159,54 +164,78 @@ public class DiscussPostController implements CommunityConstant {
     }
 
     // 置顶
-    @LoginRequired
+//    @LoginRequired
     @PostMapping("/top")
     @ResponseBody
-    public String setTop(int id){
-        discussPostService.updateType(id, 1); // 0正常 1置顶
-
+    public String setTop(int postId, int userType){
+        User user = hostHolder.getUser();
+        if(user==null){
+            return CommunityUtil.getJSONString(403, "你还没有登录哦！");
+        }
+        if(user.getType()!=userType){
+            return CommunityUtil.getJSONString(403, "你没有权限操作哦！");
+        }
+        discussPostService.updateType(postId, 1); // 0正常 1置顶
         // 触发发帖事件 更新帖子至es中
         Event event = new Event();
         event.setTopic(TOPIC_PUBLISH);
-        event.setUserId(hostHolder.getUser().getId());
+        event.setUserId(user.getId());
         event.setEntityType(ENTITY_TYPE_POST);
-        event.setEntityId(id);
+        event.setEntityId(postId);
         eventProducer.fireEvent(event);
 
         return CommunityUtil.getJSONString(0);
     }
 
     // 加精华
-    @LoginRequired
+//    @LoginRequired
     @PostMapping("/wonderful")
     @ResponseBody
-    public String setWonderful(int id){
-        discussPostService.updateStatus(id, 1); //0正常 1精华 2拉黑
+    public String setWonderful(int postId, int userType){
+        User user = hostHolder.getUser();
+        if(user==null){
+            return CommunityUtil.getJSONString(403, "你还没有登录哦！");
+        }
+        if(user.getType()!=userType){
+            return CommunityUtil.getJSONString(403, "你没有权限操作哦！");
+        }
 
+        discussPostService.updateStatus(postId, 1); //0正常 1精华 2拉黑
         // 触发发帖事件 更新帖子至es中
         Event event = new Event();
         event.setTopic(TOPIC_PUBLISH);
-        event.setUserId(hostHolder.getUser().getId());
+        event.setUserId(user.getId());
         event.setEntityType(ENTITY_TYPE_POST);
-        event.setEntityId(id);
+        event.setEntityId(postId);
         eventProducer.fireEvent(event);
+
+        // 将帖子放入redis的set集合中，然后定期计算分数(加精华会影响帖子分数)
+        String redisKey = RedisKeyUtil.getPostScoreKey();
+        redisTemplate.opsForSet().add(redisKey, postId);
 
         return CommunityUtil.getJSONString(0);
     }
 
     // 拉黑
-    @LoginRequired
+//    @LoginRequired
     @PostMapping("/delete")
     @ResponseBody
-    public String setDelete(int id){
-        discussPostService.updateStatus(id, 2);
+    public String setDelete(int postId, int userType){
+        User user = hostHolder.getUser();
+        if(user==null){
+            return CommunityUtil.getJSONString(403, "你还没有登录哦！");
+        }
+        if(user.getType()!=userType){
+            return CommunityUtil.getJSONString(403, "你没有权限操作哦！");
+        }
 
+        discussPostService.updateStatus(postId, 2);
         // 触发发帖事件 更新帖子至es中
         Event event = new Event();
         event.setTopic(TOPIC_DELETE);
-        event.setUserId(hostHolder.getUser().getId());
+        event.setUserId(user.getId());
         event.setEntityType(ENTITY_TYPE_POST);
-        event.setEntityId(id);
+        event.setEntityId(postId);
         eventProducer.fireEvent(event);
 
         return CommunityUtil.getJSONString(0);

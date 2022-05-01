@@ -26,16 +26,6 @@ spring:
         stmp:
           ssl:
             enable: true
-  task:
-    execution:
-      pool:
-        core-size: 5
-        max-size: 10
-        queue-capacity: 10
-    scheduling:
-      pool:
-        size: 5
-
 
 mybatis:
   configuration:
@@ -45,8 +35,7 @@ mybatis:
 community:
   path:
     domain: http://localhost:8080
-    upload: /Users/Pan/Desktop/upload
-
+    upload: /Users/Pan/Desktop/upload  # 后面改用七牛云了
 server:
   port: 8080
   servlet:
@@ -56,5 +45,26 @@ elasticsearch:
   host: localhost
   port: 9200
 
-# 在elasticsearch.yml中配置，并重启
-# xpack.security.enabled: false
+qiniu:
+  key:
+    access: HRHcKAGXeZ0SeJP5Xy01KFmp4R_3mSkC_35hIB3H
+    secret: E6pf1RgEZReEzibcw4SHF-Oz3o3bsAVYYg2EZEGt
+  bucket:
+    header:
+      name: mini-community-headurl
+      url: http://rb5apblqg.hd-bkt.clouddn.com
+
+caffeine:
+  posts:
+    max-size: 15
+    expire-seconds: 180
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: beans, health, database
+        exclude: info, caches
+
+
+

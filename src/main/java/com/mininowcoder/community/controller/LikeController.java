@@ -8,7 +8,9 @@ import com.mininowcoder.community.service.LikeService;
 import com.mininowcoder.community.util.CommunityConstant;
 import com.mininowcoder.community.util.CommunityUtil;
 import com.mininowcoder.community.util.HostHolder;
+import com.mininowcoder.community.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,12 +33,19 @@ public class LikeController implements CommunityConstant {
     @Autowired
     private EventProducer eventProducer;
 
-    // 异步请求
-    @LoginRequired
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+//    异步请求
+//    @LoginRequired
+//    对于异步请求的话不直接进行拦截，而是在程序中判断用户是否登录，然后将信息返回给前端
     @PostMapping("/like")
     @ResponseBody
     public String like(int entityType, int entityId, int entityUserId, int postId){
         User user = hostHolder.getUser();
+        if(user==null){
+            return CommunityUtil.getJSONString(403, "你还没有登录哦！");
+        }
         // 点赞
         likeService.like(user.getId(), entityType, entityId, entityUserId);
         // 获取点赞数量
@@ -61,6 +70,12 @@ public class LikeController implements CommunityConstant {
             event.setData(data);
 
             eventProducer.fireEvent(event);
+        }
+
+        if(entityType==ENTITY_TYPE_POST){
+            // 将帖子放入redis的set集合中，然后定期计算分数
+            String redisKey = RedisKeyUtil.getPostScoreKey();
+            redisTemplate.opsForSet().add(redisKey, postId);
         }
 
         return CommunityUtil.getJSONString(0, null, map);

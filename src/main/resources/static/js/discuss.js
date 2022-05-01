@@ -11,6 +11,7 @@ function like(btn, entityType, entityId, entityUserId, postId) {
         CONTEXT_PATH + "/like",
         {"entityType":entityType,"entityId":entityId,"entityUserId":entityUserId, "postId":postId},
         function(data) {
+            console.log(data); // 如果没有登录的话{"msg":"服务器异常！","code":1}
             data = $.parseJSON(data);
             if(data.code == 0) {
                 $(btn).children("i").text(data.likeCount);
@@ -26,7 +27,7 @@ function like(btn, entityType, entityId, entityUserId, postId) {
 function setTop() {
     $.post(
         CONTEXT_PATH + "/discuss/top",
-        {"id":$("#postId").val()},
+        {"postId":$("#postId").val(), "userType":2},  // 只有版主才有这样的权限，将这两个值传给后端
         function(data) {
             data = $.parseJSON(data);
             if(data.code == 0) {
@@ -42,7 +43,7 @@ function setTop() {
 function setWonderful() {
     $.post(
         CONTEXT_PATH + "/discuss/wonderful",
-        {"id":$("#postId").val()},
+        {"postId":$("#postId").val(), "userType":2},  //只有版主有这样的权限
         function(data) {
             data = $.parseJSON(data);
             if(data.code == 0) {
@@ -58,7 +59,7 @@ function setWonderful() {
 function setDelete() {
     $.post(
         CONTEXT_PATH + "/discuss/delete",
-        {"id":$("#postId").val()},
+        {"postId":$("#postId").val(), "userType":1}, // 只有管理员有删除的权限
         function(data) {
             data = $.parseJSON(data);
             if(data.code == 0) {

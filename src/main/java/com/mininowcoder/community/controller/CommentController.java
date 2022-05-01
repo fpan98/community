@@ -8,8 +8,11 @@ import com.mininowcoder.community.event.EventProducer;
 import com.mininowcoder.community.service.CommentService;
 import com.mininowcoder.community.service.DiscussPostService;
 import com.mininowcoder.community.util.CommunityConstant;
+import com.mininowcoder.community.util.CommunityUtil;
 import com.mininowcoder.community.util.HostHolder;
+import com.mininowcoder.community.util.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +40,9 @@ public class CommentController implements CommunityConstant {
 
     @Autowired
     private DiscussPostService discussPostService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @LoginRequired
     @PostMapping("/add/{discussPostId}")
@@ -74,6 +80,10 @@ public class CommentController implements CommunityConstant {
             event.setEntityType(ENTITY_TYPE_POST);
             event.setEntityId(discussPostId);
             eventProducer.fireEvent(event);
+
+            // 将帖子放入redis的set集合中，然后定期计算分数
+            String redisKey = RedisKeyUtil.getPostScoreKey();
+            redisTemplate.opsForSet().add(redisKey, discussPostId);
         }
 
         return "redirect:/discuss/detail/" + discussPostId;

@@ -56,9 +56,10 @@ class CommunityApplicationTests {
 
     @Test
     public void valPassword(){
-        String mysql = "7e7595dc51c0bb3f31fb25e7fed4489f";
-        String password = CommunityUtil.md5("123"+"b71d9");
-        System.out.println(mysql.equals(password));
+//        String mysql = "7e7595dc51c0bb3f31fb25e7fed4489f";
+        String password = CommunityUtil.md5("moderator"+"b71d9");
+        System.out.println(password);
+//        System.out.println(mysql.equals(password));
     }
 
 

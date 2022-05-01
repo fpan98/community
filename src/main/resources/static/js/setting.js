@@ -4,7 +4,7 @@ $(function(){
 
 function upload() {
     $.ajax({
-        url: "http://upload-z1.qiniup.com",
+        url: "http://upload.qiniup.com",
         method: "post",
         processData: false,
         contentType: false,
@@ -29,5 +29,5 @@ function upload() {
             }
         }
     });
-    return false;
+    return false; // 逻辑在上面已经完成，不用往下走了
 }

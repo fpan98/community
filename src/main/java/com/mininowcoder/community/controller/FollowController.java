@@ -58,11 +58,14 @@ public class FollowController implements CommunityConstant {
         return CommunityUtil.getJSONString(0, "已关注！");
     }
 
-    @LoginRequired
+//    @LoginRequired
     @PostMapping("/unfollow")
     @ResponseBody
     public String unfollow(int entityType, int entityId) {
         User user = hostHolder.getUser();
+        if(user==null){
+            return CommunityUtil.getJSONString(403, "你还没有登录哦！");
+        }
         followService.unfollow(user.getId(), entityType, entityId);
         return CommunityUtil.getJSONString(0, "已取消关注！");
     }

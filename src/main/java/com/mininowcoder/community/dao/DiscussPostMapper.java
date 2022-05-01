@@ -21,13 +21,15 @@ public interface DiscussPostMapper {
                     "<where>"+
                     "status!=2 "+
                     "<if test='userId!=-1'> AND user_id=#{userId} </if>"+
-                    "order by type desc, create_time desc"+
+                    "<if test='orderMode==0'> order by type desc, create_time desc </if>"+
+                    "<if test='orderMode==1'> order by type desc, score desc, create_time desc</if>"+
                     "</where>"+
                     "limit #{offset}, #{limit}"+
             "</script>")
     List<DiscussPost> selectDiscussPosts(@Param("userId") int userId,
                                          @Param("offset") int offset,
-                                         @Param("limit") int limit);
+                                         @Param("limit") int limit,
+                                         @Param("orderMode") int orderMode); // 排序模式，默认0按照置顶-createTime排；1按照置顶-score排
 
     @Select("<script>" +
                 "select count(1) from discuss_post"+
@@ -55,5 +57,8 @@ public interface DiscussPostMapper {
 
     @Update("update discuss_post set status=#{status} where id=#{id}")
     int updateStatus(int id, int status);
+
+    @Update("update discuss_post set score=#{score} where id=#{id}")
+    int updateScore(int id, double score);
 
 }
