@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/community
-    username: root
-    password: 12345678
+    username: #
+    password: #
     driver-class-name: com.mysql.cj.jdbc.Driver
   thymeleaf:
     cache: true
@@ -18,8 +18,8 @@ spring:
       auto-commit-interval: 3000
   mail:
     host: smtp.163.com
-    username: aufecomPan@163.com
-    password: JJTXHCBJRXJWWDNR
+    username: #
+    password: #
     protocol: smtps
     properties:
       mail:
@@ -35,7 +35,7 @@ mybatis:
 community:
   path:
     domain: http://localhost:8080
-    upload: /Users/Pan/Desktop/upload  # 后面改用七牛云了
+    upload: /Users/Pan/Desktop/upload
 server:
   port: 8080
   servlet:
@@ -47,12 +47,12 @@ elasticsearch:
 
 qiniu:
   key:
-    access: HRHcKAGXeZ0SeJP5Xy01KFmp4R_3mSkC_35hIB3H
-    secret: E6pf1RgEZReEzibcw4SHF-Oz3o3bsAVYYg2EZEGt
+    access: #
+    secret: #
   bucket:
     header:
-      name: mini-community-headurl
-      url: http://rb5apblqg.hd-bkt.clouddn.com
+      name: #
+      url: #
 
 caffeine:
   posts:
