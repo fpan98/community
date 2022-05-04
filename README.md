@@ -10,6 +10,7 @@
 + jdk 1.8
 + maven 3.8.4
 + mysql 8.0.27
++ redis 6.2.6
 + kafka 3.1.0
 + elasticsearch 7.15.2
 + tomcat 9.0.62
