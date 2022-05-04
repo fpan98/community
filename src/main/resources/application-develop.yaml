@@ -1,0 +1,70 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/community
+    username: #your name
+    password: #your password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  thymeleaf:
+    cache: true
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: community-consumer-group
+      enable-auto-commit: true
+      auto-commit-interval: 3000
+  mail:
+    host: smtp.163.com
+    username: #your name
+    password: #your password
+    protocol: smtps
+    properties:
+      mail:
+        stmp:
+          ssl:
+            enable: true
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+
+community:
+  path:
+    domain: # your domain
+    upload: /Users/Pan/Desktop/upload
+server:
+  port: 8080
+  servlet:
+    context-path:
+
+elasticsearch:
+  host: localhost
+  port: 9200
+
+qiniu:
+  key:
+    access: # your access
+    secret: # your secret
+  bucket:
+    header:
+      name: mini-community-headurl
+      url: # qiniu yun url
+
+caffeine:
+  posts:
+    max-size: 15
+    expire-seconds: 180
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: beans, health, database
+        exclude: info, caches
+
+
+
