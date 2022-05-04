@@ -176,6 +176,7 @@ public class DiscussPostController implements CommunityConstant {
             return CommunityUtil.getJSONString(403, "你没有权限操作哦！");
         }
         discussPostService.updateType(postId, 1); // 0正常 1置顶
+
         // 触发发帖事件 更新帖子至es中
         Event event = new Event();
         event.setTopic(TOPIC_PUBLISH);

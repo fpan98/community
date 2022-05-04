@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -109,7 +108,8 @@ public class LoginController implements CommunityConstant {
         cookie.setMaxAge(60); // cookie有效时间s
         cookie.setPath(contextPath); // cookie有效路径
         response.addCookie(cookie); // 发送给客户端
-        //将验证码存入Redis
+
+        //存入Redis
         String redisKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
         redisTemplate.opsForValue().set(redisKey, text, 60, TimeUnit.SECONDS);
 
