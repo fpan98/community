@@ -3,6 +3,7 @@
 ## 1、配置文件
 根据自身情况修改application-develop.yaml中的部分配置，包括：
 + 数据库的用户和密码
++ 项目的domain
 + 用于发送验证的邮箱用户和密码
 + 七牛云的access、secret和url
 
