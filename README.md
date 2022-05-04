@@ -16,4 +16,4 @@
 + nginx 1.14.1
 ## 3、项目总结
 该项目也将是我校招时唯一的java项目了，学完之后进行了如下总结：
-![http://rb5apblqg.hd-bkt.clouddn.com/%E8%AE%BA%E5%9D%9B%E9%A1%B9%E7%9B%AE.png](社区论坛项目总结)
+![https://github.com/fpan98/community/blob/main/images/%E8%AE%BA%E5%9D%9B%E9%A1%B9%E7%9B%AE.png](社区论坛项目总结)
