@@ -1,7 +1,10 @@
 # 仿牛客论坛-项目说明
 ## 1、项目简介
-演示地址：http://1.13.15.89 
-由于购买的服务器内存只有2G，项目中的部分服务暂时不可以访问，选择性的把elasticsearch服务关闭了。  
+演示地址：http://1.13.15.89   
+管理员账号-密码：admin:admin，版主账号-密码：moderator:moderator，普通用户账号-密码：user:user。  
+由于购买的服务器内存只有2G，项目中的部分服务暂时不可以访问，选择性的把elasticsearch服务关闭了，下面是本地电脑上elasticsearch服务的截图：  
+![elasticsearch服务截图](https://raw.githubusercontent.com/fpan98/community/main/images/es.png)
+  
 该论坛是一个互动交流平台，实现了注册登录、发帖评论、回复点赞、消息提醒、内容搜索和网站数据统计的功能，主要技术栈包括：Spring Boot、Mybatis、Redis、Kafka、Elasticsearch。  
   
 工作内容：  
