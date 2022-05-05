@@ -221,7 +221,7 @@ public class DiscussPostController implements CommunityConstant {
 //    @LoginRequired
     @PostMapping("/delete")
     @ResponseBody
-    public String setDelete(int postId, int userType){
+    public String setDelete(int postId, int userType, Page page){
         User user = hostHolder.getUser();
         if(user==null){
             return CommunityUtil.getJSONString(403, "你还没有登录哦！");
@@ -231,6 +231,7 @@ public class DiscussPostController implements CommunityConstant {
         }
 
         discussPostService.updateStatus(postId, 2);
+
         // 触发发帖事件 更新帖子至es中
         Event event = new Event();
         event.setTopic(TOPIC_DELETE);

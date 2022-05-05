@@ -82,7 +82,6 @@ public class DiscussPostService {
                         return discussPostMapper.selectDiscussPostRows(key);
                     }
                 });
-
     }
 
     // userId=-1时表示查询所有数据，否则查询指定用户的数据
@@ -132,6 +131,10 @@ public class DiscussPostService {
     }
 
     public int updateStatus(int id, int status){
+        // 删除操作并没有将帖子删除，而是将帖子的状态设置为不可见
+        // 同时需要注意更新caffeine缓存,这里简化就直接删除了
+        postListCache.invalidateAll();
+        postRowsCache.invalidateAll();
         return discussPostMapper.updateStatus(id, status);
     }
 
