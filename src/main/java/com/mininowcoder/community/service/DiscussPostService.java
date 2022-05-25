@@ -5,6 +5,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.mininowcoder.community.dao.DiscussPostMapper;
 import com.mininowcoder.community.entity.DiscussPost;
+import com.mininowcoder.community.util.RedisKeyUtil;
 import com.mininowcoder.community.util.SensitiveFilter;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
@@ -64,7 +65,7 @@ public class DiscussPostService {
                         }
                         int offset = Integer.valueOf(params[0]);
                         int limit = Integer.valueOf(params[1]);
-                        // TODO:二级缓存 redis
+                        // TODO:二级缓存 redis 缓存热门帖子
 
                         logger.debug("load post list from DB.");
                         return discussPostMapper.selectDiscussPosts(-1, offset, limit, 1);

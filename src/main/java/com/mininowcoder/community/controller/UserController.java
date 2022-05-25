@@ -1,12 +1,15 @@
 package com.mininowcoder.community.controller;
 import com.mininowcoder.community.annotation.LoginRequired;
+import com.mininowcoder.community.entity.DiscussPost;
 import com.mininowcoder.community.entity.User;
+import com.mininowcoder.community.service.DiscussPostService;
 import com.mininowcoder.community.service.FollowService;
 import com.mininowcoder.community.service.LikeService;
 import com.mininowcoder.community.service.UserService;
 import com.mininowcoder.community.util.CommunityConstant;
 import com.mininowcoder.community.util.CommunityUtil;
 import com.mininowcoder.community.util.HostHolder;
+import com.mininowcoder.community.util.Page;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +27,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by FeiPan on 2022/4/22.
@@ -66,6 +73,9 @@ public class UserController implements CommunityConstant {
 
     @Autowired
     private HostHolder hostHolder;
+
+    @Autowired
+    private DiscussPostService discussPostService;
 
     @LoginRequired
     @GetMapping("/setting")
@@ -202,6 +212,34 @@ public class UserController implements CommunityConstant {
         model.addAttribute("hasFollowed", hasFollowed);
 
         return "/site/profile";
+    }
+
+    // 我的帖子
+    @LoginRequired
+    @GetMapping("/mypost/{userId}")
+    public String getMyPost(Model model, Page page, @PathVariable("userId") int userId){
+        User user = userService.findUserById(userId);
+        if(user==null){
+            throw new RuntimeException("该用户不存在！");
+        }
+        page.setRows(discussPostService.findDisscussPostRows(userId));
+        page.setPath("/user/mypost/"+userId);
+
+        List<DiscussPost> list = discussPostService.findDiscussPost(userId, page.getOffset(), page.getLimit(), 0);
+        List<Map<String, Object>> discussPosts = new ArrayList<>();
+        if(list!=null){
+            for(DiscussPost post: list){
+                Map<String, Object> map = new HashMap<>();
+                map.put("post", post);
+                map.put("user", user);
+                long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
+                map.put("likeCount", likeCount);
+                discussPosts.add(map);
+            }
+        }
+        model.addAttribute("discussPosts", discussPosts);
+        model.addAttribute("postCount", page.getRows());
+        return  "/site/my-post";
     }
 
 }

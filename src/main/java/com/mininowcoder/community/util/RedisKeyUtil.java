@@ -21,6 +21,7 @@ public class RedisKeyUtil {
 
     private static final String PREFIX_POST = "post";
 
+
     // 实体赞的key like:entity:entityType:entityId 存放set(userId) 点赞的用户id
     public static String getEntityLikeKey(int entityType, int entityId) {
         return PREFIX_ENTITY_LIKE + SPLIT + entityType + SPLIT + entityId;
@@ -81,4 +82,5 @@ public class RedisKeyUtil {
     public static String getPostScoreKey() {
         return PREFIX_POST + SPLIT + "score";
     }
+
 }

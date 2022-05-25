@@ -20,7 +20,7 @@ public class QuartzConfig {
     @Bean
     public JobDetailFactoryBean postScoreRefreshJobDetail() {
         JobDetailFactoryBean factoryBean = new JobDetailFactoryBean();
-        factoryBean.setJobClass(PostScoreRefreshJob.class);
+        factoryBean.setJobClass(PostScoreRefreshJob.class);  // class关联帖子刷新任务
         factoryBean.setName("postScoreRefreshJob");
         factoryBean.setGroup("communityJobGroup");
         factoryBean.setDurability(true);
@@ -34,7 +34,7 @@ public class QuartzConfig {
         factoryBean.setJobDetail(postScoreRefreshJobDetail);
         factoryBean.setName("postScoreRefreshTrigger");
         factoryBean.setGroup("communityTriggerGroup");
-        factoryBean.setRepeatInterval(1000 * 60 * 30); // 分数刷新间隔 30分钟
+        factoryBean.setRepeatInterval(1000 * 60 * 5); // 分数刷新间隔 5分钟
         factoryBean.setJobDataMap(new JobDataMap());
         return factoryBean;
     }
