@@ -2,8 +2,7 @@
 ## 1、项目简介
 演示地址：http://1.13.15.89   
 管理员账号-密码：admin:admin，版主账号-密码：moderator:moderator，普通用户账号-密码：user:user。  
-由于购买的服务器内存只有2G，项目中的部分服务暂时不可以访问，选择性的把elasticsearch服务关闭了，下面是本地电脑上elasticsearch服务的截图：  
-![elasticsearch服务截图](https://raw.githubusercontent.com/fpan98/community/main/images/es.png)
+注：租服务器的时候，内存最起码选4G的，所有服务都启动内存最小4G，不然启动不起来。
   
 该论坛是一个互动交流平台，实现了注册登录、发帖评论、回复点赞、消息提醒、内容搜索和网站数据统计的功能，主要技术栈包括：Spring Boot、Mybatis、Redis、Kafka、Elasticsearch。  
   
@@ -12,7 +11,9 @@
 + 使用Redis的set实现点赞，zset实现关注，HyperLogLog统计UV，Bitmap统计DAU；  
 + 使用kafka处理发送评论、点赞和关注等系统通知，起到解耦和异步调用的作用；   
 + 使用Elasticsearch实现对帖子的搜索功能，通过IK中文分词器增加增量索引和全局索引，实现搜索关键词高亮显示等功能；  
-+ 对热贴排行模块，使用分布式缓存Redis和本地缓存Caffeine作为多级缓存，将QPS提升60多倍(4.3-285)，大大提升了网站访问速度，并使用Quartz定时更新热贴排行榜。  
++ 对热贴排行模块，使用分布式缓存Redis和本地缓存Caffeine作为多级缓存，将QPS提升60多倍(5.4-295)，大大提升了网站访问速度，并使用Quartz定时更新热贴排行榜。 
+
+后来在不同机器上做测试，QPS提升差距很大，测试结果就是机器越好提升效果越小。
 ## 2、配置文件
 根据自身情况修改application-develop.yaml中的部分配置，包括：
 + 数据库的用户和密码
